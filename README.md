@@ -1,4 +1,4 @@
-# 🧠 Hello World — Assembly x86-64 (Linux)
+# 🧠 Assembly x86-64 (Linux)
 -----------------------------------------
 
     Assembly x86-64 • Linux • NASM • Syscalls Diretas
