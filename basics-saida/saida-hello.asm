@@ -3,7 +3,7 @@
 ;NASM + syscalls diretas 
 ;================================
 
-;nasm -f elf64 hello.asm (codigo bash compilador asm)
+; nasm -f elf64 hello.asm (codigo bash compilador asm)
 ; ld -s -o hello ./hello.o (Linkedição)
 ;retorna um hello.o (new file) = linguagem baixo nivel compilada 
 

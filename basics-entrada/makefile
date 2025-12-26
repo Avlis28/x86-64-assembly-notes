@@ -1,8 +1,7 @@
-nome = entrada 
+all: entrada
 
-all: $(nome).o	
-	ld -s -o $(nome)  $(nome).o
-	rm -rf *.0;
+entrada: entrada.o
+	ld -s -o entrada entrada.o
 
 %.o: %.asm 
-	nasm -f elf64 $<   
+	nasm -f elf64 $< -o $@
