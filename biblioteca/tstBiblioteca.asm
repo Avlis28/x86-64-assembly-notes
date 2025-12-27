@@ -28,6 +28,6 @@ _start:
 
    call saidaResultado               ; Call the output function
 
-    mov eax, sys_exit                ; Prepare to exit
-    mov ebx, ret_exit                ; Exit code 0
-    int sys_call                     ; Make the system call
+   mov eax, sys_exit                ; Prepare to exit
+   mov ebx, ret_exit                ; Exit code 0
+   int sys_call                     ; Make the system call

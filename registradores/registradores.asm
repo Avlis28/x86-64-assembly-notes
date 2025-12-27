@@ -3,6 +3,46 @@
 ; Linkar com: ld -s -o registradores registradores.o
 
 ; =============================================================================
+; PADRÃO x86-32 LINUX (i386 ABI)
+; =============================================================================
+;
+; Este documento também cobre o padrão i386 ABI para Linux 32 bits:
+; - Convenções de chamada de funções
+; - Uso de registradores
+; - Alinhamento de pilha
+;
+; REGISTRADORES DE PROPÓSITO GERAL (32 bits):
+; - EAX: Acumulador, valor de retorno de funções
+; - EBX: Base, preservado pelo callee (callee-saved)
+; - ECX: Contador, usado em loops e shifts
+; - EDX: Dados, extensão de EAX para multiplicações/divisões
+; - ESI: Índice fonte, usado em operações de string
+; - EDI: Índice destino, usado em operações de string
+; - EBP: Ponteiro base da pilha, preservado pelo callee
+; - ESP: Ponteiro da pilha (não alterar diretamente)
+;
+; CONVENÇÃO DE CHAMADA:
+; - Argumentos: Passados na pilha (push antes da call)
+; - Ordem: Último argumento primeiro (direita para esquerda)
+; - Retorno: EAX (até 32 bits), EDX:EAX (64 bits)
+; - Chamador salva: EAX, ECX, EDX
+; - Chamado salva: EBX, ESI, EDI, EBP
+; - Estruturas pequenas: Passadas por valor na pilha
+; - Estruturas grandes: Passadas por referência
+;
+; PILHA E ALINHAMENTO:
+; - Alinhada a 4 bytes (não 16 como em 64 bits)
+; - Sem zona vermelha
+; - Chamador limpa a pilha após a call (cdecl)
+;
+; SYSCALLS (32 bits):
+; - Número do syscall em EAX
+; - Argumentos em EBX, ECX, EDX, ESI, EDI (até 5 args)
+; - Retorno em EAX
+;
+; =============================================================================
+
+; =============================================================================
 ; PADRÃO x86-64 LINUX (System V AMD64 ABI)
 ; =============================================================================
 ;
