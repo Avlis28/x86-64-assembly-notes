@@ -1,44 +1,79 @@
-# 🧠 Assembly x86-64 (Linux)
------------------------------------------
+🧠 Assembly x86 (32-bit Linux)
+Assembly x86 • Linux • NASM • Syscalls Diretas
 
-    Assembly x86-64 • Linux • NASM • Syscalls Diretas
+� � � � �
+📌 Descrição
+Este repositório contém um programa em Assembly x86 (32 bits) para Linux, utilizando syscalls diretas via int 0x80.
+Não é um Hello World trivial.
+O programa:
+escreve múltiplas mensagens no terminal
+lê entrada do usuário (stdin)
+ecoa o conteúdo digitado
+encerra corretamente o processo
+Sem libc.
+Sem main.
+Sem abstrações modernas.
+Apenas CPU → Kernel → Terminal.
+🧩 Arquitetura
+CPU: x86 (IA-32)
+Sistema Operacional: Linux 32-bit
+Assembler: NASM
+Linker: GNU ld
+Modelo: ELF32
+Interface: int 0x80
 
----
+; echo.asm — I/O básico em Assembly x86 (32-bit Linux)
+; NASM + syscalls diretas (int 0x80)
 
-![assembly](https://img.shields.io/badge/Assembly-x86--64-black)
-![linux](https://img.shields.io/badge/Linux-AMD64-yellow)
-![nasm](https://img.shields.io/badge/NASM-assembler-blue)
-![syscall](https://img.shields.io/badge/Syscall-direct-red)
-![status](https://img.shields.io/badge/status-estável-brightgreen)
+section .data
+    prompt  db "Digite algo: ", 0xA
+    plen    equ $ - prompt
 
----
+    outmsg  db "Voce digitou: ", 0xA
+    olen    equ $ - outmsg
 
-## 📌 Descrição
+section .bss
+    buffer  resb 128
 
-Este repositório contém um **Hello World mínimo e funcional** escrito em **Assembly x86-64**, utilizando **Linux** e **chamadas de sistema diretas** (`syscall`).
+section .text
+    global _start
 
-Sem libc.  
-Sem `main`.  
-Sem abstrações.
+_start:
+    ; write(stdout, prompt, plen)
+    mov eax, 4          ; sys_write
+    mov ebx, 1          ; stdout
+    mov ecx, prompt
+    mov edx, plen
+    int 0x80
 
-Apenas **CPU → Kernel → Terminal**.
+    ; read(stdin, buffer, 128)
+    mov eax, 3          ; sys_read
+    mov ebx, 0          ; stdin
+    mov ecx, buffer
+    mov edx, 128
+    int 0x80
+    mov esi, eax        ; bytes lidos
 
----
+    ; write(stdout, outmsg, olen)
+    mov eax, 4
+    mov ebx, 1
+    mov ecx, outmsg
+    mov edx, olen
+    int 0x80
 
-## 🧩 Arquitetura
+    ; write(stdout, buffer, bytes_lidos)
+    mov eax, 4
+    mov ebx, 1
+    mov ecx, buffer
+    mov edx, esi
+    int 0x80
 
-- **CPU:** x86-64 (AMD64)
-- **Sistema Operacional:** Linux
-- **Assembler:** NASM
-- **Linker:** GNU ld
-- **Modelo:** ELF64
-- **Paradigma:** Syscalls diretas
+    ; exit(0)
+    mov eax, 1          ; sys_exit
+    xor ebx, ebx
+    int 0x80
 
----
-
-## 📂 Estrutura
-
-```text
-.
-├── hello.asm   # Código Assembly
-└── README.md   # Documentação
+------------------------------------
+compilação e linkedição
+nasm -f elf32 src/echo.asm -o echo.o
+ld -m elf_i386 echo.o -o echo
