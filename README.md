@@ -80,20 +80,5 @@ nasm -f elf64 src/echo64.asm -o echo64.o
 ld echo64.o -o echo64
 ```
 
-Observações
------------
-- Os números das syscalls usados acima são para Linux x86-64 (read=0, write=1, exit=60).
-- O exemplo evita libc e usa o ponto de entrada _start.
-- Se precisar manter exemplos em x86 (32-bit) originais, eles podem ficar em uma pasta legacy/ ou examples/32bit/.
-
-Contribuição
-------------
-Contribuições são bem-vindas: abra issues para discutir mudanças, ou envie pull requests com exemplos, notas e melhorias.
-
-Licença
--------
-Adicione aqui a licença do projeto (por exemplo, MIT) ou deixe como está se preferir.
-
----
 
 Commit: docs: update README with banner and structured layout
