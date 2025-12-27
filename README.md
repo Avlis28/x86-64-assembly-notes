@@ -1,30 +1,26 @@
-🧠 Assembly x86 (32-bit Linux)
+========================================
+ x86-64 Assembly Notes
+========================================
 
-Assembly x86 • Linux • NASM • Syscalls Diretas
+Descrição
+-------
+Este repositório reúne notas e exemplos de Assembly x86-64 para Linux, escritos com NASM e syscalls diretas (instrução syscall). O foco é ensinar I/O e fluxo mínimo sem libc, direto da CPU para o kernel.
 
-� � � � �
-📌 Descrição
-Este repositório contém um programa em Assembly x86 (32 bits) para Linux, utilizando syscalls diretas via int 0x80.
-Não é um Hello World trivial.
-O programa:
-escreve múltiplas mensagens no terminal
-lê entrada do usuário (stdin)
-ecoa o conteúdo digitado
-encerra corretamente o processo
-Sem libc.
-Sem main.
-Sem abstrações modernas.
-Apenas CPU → Kernel → Terminal.
-🧩 Arquitetura
-CPU: x86 (IA-32)
-Sistema Operacional: Linux 32-bit
-Assembler: NASM
-Linker: GNU ld
-Modelo: ELF32
-Interface: int 0x80
+Arquitetura
+----------
+- CPU: x86-64 (AMD64 / Intel 64)
+- Sistema Operacional: Linux (ELF64)
+- Assembler: NASM
+- Linker: GNU ld
+- Interface de chamadas de sistema: instrução syscall
 
-; echo.asm — I/O básico em Assembly x86 (32-bit Linux)
-; NASM + syscalls diretas (int 0x80)
+Exemplo de código
+------------------
+Aqui está um exemplo simples (echo) em Assembly x86-64 que: imprime um prompt, lê até 128 bytes do stdin e ecoa de volta.
+
+```asm
+; echo64.asm - I/O básico em Assembly x86-64 (Linux)
+; NASM + syscalls (syscall instruction)
 
 section .data
     prompt  db "Digite algo: ", 0xA
@@ -40,42 +36,64 @@ section .text
     global _start
 
 _start:
-    ; write(stdout, prompt, plen)
-    mov eax, 4          ; sys_write
-    mov ebx, 1          ; stdout
-    mov ecx, prompt
-    mov edx, plen
-    int 0x80
+    ; write(1, prompt, plen)
+    mov rax, 1          ; sys_write (1)
+    mov rdi, 1          ; fd = stdout
+    mov rsi, prompt
+    mov rdx, plen
+    syscall
 
-    ; read(stdin, buffer, 128)
-    mov eax, 3          ; sys_read
-    mov ebx, 0          ; stdin
-    mov ecx, buffer
-    mov edx, 128
-    int 0x80
-    mov esi, eax        ; bytes lidos
+    ; read(0, buffer, 128)
+    mov rax, 0          ; sys_read (0)
+    mov rdi, 0          ; fd = stdin
+    mov rsi, buffer
+    mov rdx, 128
+    syscall
+    mov r12, rax        ; bytes lidos
 
-    ; write(stdout, outmsg, olen)
-    mov eax, 4
-    mov ebx, 1
-    mov ecx, outmsg
-    mov edx, olen
-    int 0x80
+    ; write(1, outmsg, olen)
+    mov rax, 1
+    mov rdi, 1
+    mov rsi, outmsg
+    mov rdx, olen
+    syscall
 
-    ; write(stdout, buffer, bytes_lidos)
-    mov eax, 4
-    mov ebx, 1
-    mov ecx, buffer
-    mov edx, esi
-    int 0x80
+    ; write(1, buffer, bytes_lidos)
+    mov rax, 1
+    mov rdi, 1
+    mov rsi, buffer
+    mov rdx, r12
+    syscall
 
     ; exit(0)
-    mov eax, 1          ; sys_exit
-    xor ebx, ebx
-    int 0x80
+    mov rax, 60         ; sys_exit (60)
+    xor rdi, rdi        ; status = 0
+    syscall
+```
 
-------------------------------------
-compilação e linkedição
+Compilação e linkedição
+------------------------
+Para montar e linkar no sistema x86-64: 
 
-nasm -f elf32 src/echo.asm -o echo.o
-ld -m elf_i386 echo.o -o echo
+```sh
+nasm -f elf64 src/echo64.asm -o echo64.o
+ld echo64.o -o echo64
+```
+
+Observações
+-----------
+- Os números das syscalls usados acima são para Linux x86-64 (read=0, write=1, exit=60).
+- O exemplo evita libc e usa o ponto de entrada _start.
+- Se precisar manter exemplos em x86 (32-bit) originais, eles podem ficar em uma pasta legacy/ ou examples/32bit/.
+
+Contribuição
+------------
+Contribuições são bem-vindas: abra issues para discutir mudanças, ou envie pull requests com exemplos, notas e melhorias.
+
+Licença
+-------
+Adicione aqui a licença do projeto (por exemplo, MIT) ou deixe como está se preferir.
+
+---
+
+Commit: docs: update README with banner and structured layout
