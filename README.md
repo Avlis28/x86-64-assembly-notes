@@ -1,4 +1,5 @@
 🧠 Assembly x86 (32-bit Linux)
+
 Assembly x86 • Linux • NASM • Syscalls Diretas
 
 � � � � �
@@ -75,5 +76,6 @@ _start:
 
 ------------------------------------
 compilação e linkedição
+
 nasm -f elf32 src/echo.asm -o echo.o
 ld -m elf_i386 echo.o -o echo
