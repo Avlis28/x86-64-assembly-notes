@@ -79,6 +79,4 @@ Para montar e linkar no sistema x86-64:
 nasm -f elf64 src/echo64.asm -o echo64.o
 ld echo64.o -o echo64
 ```
-
-
 Commit: docs: update README with banner and structured layout
