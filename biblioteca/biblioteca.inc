@@ -10,9 +10,8 @@ section .data
         std_out         equ      0x1            ; Saida padrão
         tamanhoBuffer   equ      0xa            ; Tamanho do buffer de entrada
 
-
 section .bss
-bufferEntrada   resb    tamanhoBuffer           ; Reserva 10 bytes para o buffer de entrada
+bufferEntrada   resb   tamanhoBuffer            ; Reserva 10 bytes para o buffer de entrada
 
 
 section .text
