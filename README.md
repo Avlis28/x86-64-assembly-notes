@@ -1,44 +1,82 @@
-# 🧠 Assembly x86-64 (Linux)
------------------------------------------
+========================================
+ x86-64 Assembly Notes
+========================================
 
-    Assembly x86-64 • Linux • NASM • Syscalls Diretas
+Descrição
+-------
+Este repositório reúne notas e exemplos de Assembly x86-64 para Linux, escritos com NASM e syscalls diretas (instrução syscall). O foco é ensinar I/O e fluxo mínimo sem libc, direto da CPU para o kernel.
 
----
+Arquitetura
+----------
+- CPU: x86-64 (AMD64 / Intel 64)
+- Sistema Operacional: Linux (ELF64)
+- Assembler: NASM
+- Linker: GNU ld
+- Interface de chamadas de sistema: instrução syscall
 
-![assembly](https://img.shields.io/badge/Assembly-x86--64-black)
-![linux](https://img.shields.io/badge/Linux-AMD64-yellow)
-![nasm](https://img.shields.io/badge/NASM-assembler-blue)
-![syscall](https://img.shields.io/badge/Syscall-direct-red)
-![status](https://img.shields.io/badge/status-estável-brightgreen)
+Exemplo de código
+------------------
+Aqui está um exemplo simples (echo) em Assembly x86-64 que: imprime um prompt, lê até 128 bytes do stdin e ecoa de volta.
 
----
+```asm
+; echo64.asm - I/O básico em Assembly x86-64 (Linux)
+; NASM + syscalls (syscall instruction)
 
-## 📌 Descrição
+section .data
+    prompt  db "Digite algo: ", 0xA
+    plen    equ $ - prompt
 
-Este repositório contém um **Hello World mínimo e funcional** escrito em **Assembly x86-64**, utilizando **Linux** e **chamadas de sistema diretas** (`syscall`).
+    outmsg  db "Voce digitou: ", 0xA
+    olen    equ $ - outmsg
 
-Sem libc.  
-Sem `main`.  
-Sem abstrações.
+section .bss
+    buffer  resb 128
 
-Apenas **CPU → Kernel → Terminal**.
+section .text
+    global _start
 
----
+_start:
+    ; write(1, prompt, plen)
+    mov rax, 1          ; sys_write (1)
+    mov rdi, 1          ; fd = stdout
+    mov rsi, prompt
+    mov rdx, plen
+    syscall
 
-## 🧩 Arquitetura
+    ; read(0, buffer, 128)
+    mov rax, 0          ; sys_read (0)
+    mov rdi, 0          ; fd = stdin
+    mov rsi, buffer
+    mov rdx, 128
+    syscall
+    mov r12, rax        ; bytes lidos
 
-- **CPU:** x86-64 (AMD64)
-- **Sistema Operacional:** Linux
-- **Assembler:** NASM
-- **Linker:** GNU ld
-- **Modelo:** ELF64
-- **Paradigma:** Syscalls diretas
+    ; write(1, outmsg, olen)
+    mov rax, 1
+    mov rdi, 1
+    mov rsi, outmsg
+    mov rdx, olen
+    syscall
 
----
+    ; write(1, buffer, bytes_lidos)
+    mov rax, 1
+    mov rdi, 1
+    mov rsi, buffer
+    mov rdx, r12
+    syscall
 
-## 📂 Estrutura
+    ; exit(0)
+    mov rax, 60         ; sys_exit (60)
+    xor rdi, rdi        ; status = 0
+    syscall
+```
 
-```text
-.
-├── hello.asm   # Código Assembly
-└── README.md   # Documentação
+Compilação e linkedição
+------------------------
+Para montar e linkar no sistema x86-64: 
+
+```sh
+nasm -f elf64 src/echo64.asm -o echo64.o
+ld echo64.o -o echo64
+```
+Commit: docs: update README with banner and structured layout
