@@ -67,3 +67,5 @@ int_to_string:
    test eax, eax
    jnz .prox_digito
    ret 
+
+
