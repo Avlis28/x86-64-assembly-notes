@@ -1,4 +1,4 @@
-nome = menu
+nome = arrays
 
 all: $(nome).o
 	ld -s -o $(nome) $(nome).o
