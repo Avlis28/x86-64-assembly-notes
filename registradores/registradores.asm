@@ -11,6 +11,16 @@
 ; - Uso de registradores
 ; - Alinhamento de pilha
 ;
+; REGISTRADORES DE PROPÓSITO GERAL (16 bits):
+; - AX: Registrador acumulador (16 bits)
+; - BX: Registrador base (16 bits)
+; - CX: Registrador contador (16 bits)
+; - DX: Registrador de dados (16 bits)
+; - SI: Registrador índice fonte (16 bits)
+; - DI: Registrador índice destino (16 bits)
+; - BP: Ponteiro base da pilha (16 bits)
+; - SP: Ponteiro da pilha (16 bits)
+;
 ; REGISTRADORES DE PROPÓSITO GERAL (32 bits):
 ; - EAX: Acumulador, valor de retorno de funções
 ; - EBX: Base, preservado pelo callee (callee-saved)
