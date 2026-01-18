@@ -26,7 +26,7 @@ _start:
 
    
 
-   call saidaResultado               ; Call the output function
+   call saidaResultado              ; Call the output function
 
    mov eax, sys_exit                ; Prepare to exit
    mov ebx, ret_exit                ; Exit code 0

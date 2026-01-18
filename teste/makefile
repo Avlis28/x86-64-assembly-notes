@@ -1,4 +1,4 @@
-nome = arrays 
+nome = teste 
 
 all: $(nome).o
 	ld -s -o $(nome) $(nome).o
