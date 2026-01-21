@@ -1,6 +1,8 @@
-nome = teste 
+nome = teste
 
-all: $(nome).o
+all: $(nome)
+
+$(nome): $(nome).o
 	ld -s -o $(nome) $(nome).o
 
 %.o: %.asm bibliotecaE.inc

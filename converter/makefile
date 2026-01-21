@@ -1,8 +1,8 @@
 nome = converter
 
 all: $(nome).o
-	ld -m elf_i386 -s -o $(nome) $(nome).o
+	ld -s -o $(nome) $(nome).o
 	rm -rf *.o
 
 %.o: %.asm
-	nasm -f elf32 $< -o $@
+	nasm -f elf64 $< -o $@
