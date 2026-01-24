@@ -30,6 +30,11 @@ into_to_string:                               ; label/etiqueta da sub-rotina de 
     mov byte [rsi], 0xa 
     mov rbx, 0xa
 
+string_to_int:                               ; label/etiqueta da sub-rotina de conversao de string para inteiro
+    mov rax, 0                                ; Zera o registrador RAX (acumulador)
+    mov rcx, 0                                ; Zera o registrador RCX (contador/index)     
+
+
 proximo_digito:                              ; label/etiqueta do proximo digito
     xor rdx, rdx
     div rbx
